@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: agent-platform-config
+  namespace: agent-platform
+data:
+  APP_ENV: "production"
+  APP_PORT: "8000"
+  LOG_LEVEL: "INFO"
+  # Ollama — deployed as a separate pod in the cluster
+  OLLAMA_BASE_URL: "http://ollama-service:11434"
+  OLLAMA_DEFAULT_MODEL: "llama3.2"
+  OLLAMA_EMBED_MODEL: "nomic-embed-text"
+  DEFAULT_PROVIDER: "ollama"
+  DEFAULT_MODEL: "llama3.2"
+  EVAL_JUDGE_MODEL: "llama3.2"
+  OTEL_ENABLED: "false"
+  OTEL_SERVICE_NAME: "agent-platform"

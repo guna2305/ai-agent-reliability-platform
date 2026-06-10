@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-platform-api
+  namespace: agent-platform
+  labels:
+    app: agent-platform-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: agent-platform-api
+  template:
+    metadata:
+      labels:
+        app: agent-platform-api
+    spec:
+      containers:
+        - name: api
+          image: agent-platform-api:latest
+          imagePullPolicy: IfNotPresent  # Use local Minikube image
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: agent-platform-config
+            - secretRef:
+                name: agent-platform-secrets
+          readinessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "200m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agent-platform-api-service
+  namespace: agent-platform
+spec:
+  selector:
+    app: agent-platform-api
+  ports:
+    - port: 8000
+      targetPort: 8000
+  type: ClusterIP

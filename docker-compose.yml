@@ -11,6 +11,11 @@ x-backend-env: &backend-env
   CELERY_BROKER_URL: redis://redis:6379/1
   CELERY_RESULT_BACKEND: redis://redis:6379/2
   APP_ENV: development
+  # Ollama — default AI provider (free, local)
+  OLLAMA_BASE_URL: http://ollama:11434
+  DEFAULT_PROVIDER: ollama
+  DEFAULT_MODEL: llama3.2
+  EVAL_JUDGE_MODEL: llama3.2
 
 services:
   # ── PostgreSQL (with pgvector extension) ────────────────────────────────────
@@ -138,6 +143,23 @@ services:
     depends_on:
       - redis
 
+  # ── Ollama (local LLM — free, no API keys needed) ───────────────────────────
+  ollama:
+    image: ollama/ollama:latest
+    container_name: agent_platform_ollama
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    # GPU support (uncomment if you have NVIDIA GPU + nvidia-container-toolkit):
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
   # ── React Frontend ───────────────────────────────────────────────────────────
   frontend:
     build:
@@ -207,5 +229,6 @@ services:
 volumes:
   postgres_data:
   redis_data:
+  ollama_data:
   prometheus_data:
   grafana_data:
