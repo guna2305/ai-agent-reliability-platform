@@ -10,6 +10,12 @@ from .pg_execution_repository import (
     PostgresExecutionTraceRepository,
     PostgresToolCallRepository,
 )
+from .pg_evaluation_repository import (
+    PostgresDatasetRepository,
+    PostgresDatasetItemRepository,
+    PostgresEvaluationRunRepository,
+    PostgresEvaluationResultRepository,
+)
 
 __all__ = [
     "PostgresAgentRepository",
@@ -24,4 +30,8 @@ __all__ = [
     "PostgresExecutionRepository",
     "PostgresExecutionTraceRepository",
     "PostgresToolCallRepository",
+    "PostgresDatasetRepository",
+    "PostgresDatasetItemRepository",
+    "PostgresEvaluationRunRepository",
+    "PostgresEvaluationResultRepository",
 ]

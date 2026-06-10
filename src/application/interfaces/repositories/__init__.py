@@ -6,6 +6,10 @@ from .organization_repository import OrganizationRepository, OrgMemberRepository
 from .agent_v2_repository import AgentV2Repository, AgentVersionRepository
 from .api_key_repository import ApiKeyRepository
 from .execution_repository import ExecutionRepository, ExecutionTraceRepository, ToolCallRepository
+from .evaluation_repository import (
+    DatasetRepository, DatasetItemRepository,
+    EvaluationRunRepository, EvaluationResultRepository,
+)
 
 __all__ = [
     "AgentRepository",
@@ -20,4 +24,8 @@ __all__ = [
     "ExecutionRepository",
     "ExecutionTraceRepository",
     "ToolCallRepository",
+    "DatasetRepository",
+    "DatasetItemRepository",
+    "EvaluationRunRepository",
+    "EvaluationResultRepository",
 ]
