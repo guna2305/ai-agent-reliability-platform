@@ -17,7 +17,7 @@ dependencies = [
     "psycopg2-binary>=2.9.9",
     "alembic>=1.13.1",
     # Validation & config
-    "pydantic>=2.7.0",
+    "pydantic[email]>=2.7.0",
     "pydantic-settings>=2.3.0",
     "python-dotenv>=1.0.1",
     # Auth
