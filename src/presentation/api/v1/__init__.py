@@ -4,9 +4,25 @@ from .agents import router as agents_router
 from .runs import router as runs_router
 from .health_checks import router as health_checks_router
 from .system import router as system_router
+from .auth import router as auth_router
+from .organizations import router as organizations_router
+from .agents_v2 import router as agents_v2_router
+from .api_keys import router as api_keys_router
 
 v1_router = APIRouter(prefix="/api/v1")
+
+# Public / legacy
 v1_router.include_router(system_router)
+
+# Auth
+v1_router.include_router(auth_router)
+
+# Org-scoped (authenticated)
+v1_router.include_router(organizations_router)
+v1_router.include_router(agents_v2_router)
+v1_router.include_router(api_keys_router)
+
+# Legacy v1 (unauthenticated for backward compat during Phase 2)
 v1_router.include_router(agents_router)
 v1_router.include_router(runs_router)
 v1_router.include_router(health_checks_router)
