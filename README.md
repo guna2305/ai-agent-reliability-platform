@@ -82,8 +82,8 @@ presentation/    ← FastAPI routers, Pydantic schemas, DI wiring
 | 1 | Architecture, database schema (20 tables), React scaffold, Docker, CI/CD | ✅ Done |
 | 2 | Auth (JWT + RBAC), org management, agent registry v2, API keys | ✅ Done |
 | 3 | Execution engine, span tracing, cost calculator, analytics, Minikube K8s | ✅ Done |
-| 4 | Evaluation framework (LLM-judge + RAGAS + DeepEval) | 🔨 Next |
-| 5 | Hallucination detection | Planned |
+| 4 | Evaluation framework (LLM-judge, ground-truth, RAG metrics, Celery pipeline) | ✅ Done |
+| 5 | Hallucination detection | 🔨 Next |
 | 6 | Failure clustering with embeddings | Planned |
 | 7 | React dashboard with live charts | Planned |
 | 8 | Full K8s deployment with Helm | Planned |
@@ -200,6 +200,18 @@ GET    /organizations/{slug}/executions/{id}/tool-calls
 GET    /organizations/{slug}/analytics/executions    Stats + success rate
 GET    /organizations/{slug}/analytics/costs         Cost by model + daily
 GET    /organizations/{slug}/analytics/models        Supported models + pricing
+
+# Datasets (golden / benchmark / regression test sets)
+POST   /organizations/{slug}/datasets                Create dataset
+GET    /organizations/{slug}/datasets                List datasets
+POST   /organizations/{slug}/datasets/{id}/items     Bulk-add test cases
+GET    /organizations/{slug}/datasets/{id}/items     List test cases
+
+# Evaluations (LLM-judge / ground-truth / RAG — all via Ollama)
+POST   /organizations/{slug}/evaluations/runs                Launch eval (dispatched to Celery)
+GET    /organizations/{slug}/evaluations/runs                List eval runs
+GET    /organizations/{slug}/evaluations/runs/{id}           Run status + aggregate scores
+GET    /organizations/{slug}/evaluations/runs/{id}/results   Per-item scores
 ```
 
 ---
