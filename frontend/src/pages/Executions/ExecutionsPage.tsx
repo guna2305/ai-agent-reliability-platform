@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Zap, ChevronRight } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import type { ExecutionStatus } from '@/types/api'
 

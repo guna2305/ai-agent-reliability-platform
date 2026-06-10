@@ -1,4 +1,4 @@
-import { FlaskConical, Play, CheckCircle, XCircle } from 'lucide-react'
+import { FlaskConical, Play } from 'lucide-react'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import type { EvaluationStatus } from '@/types/api'
 

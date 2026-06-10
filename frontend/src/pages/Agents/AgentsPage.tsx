@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
 import { Bot, Plus, Search } from 'lucide-react'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import type { Agent } from '@/types/api'

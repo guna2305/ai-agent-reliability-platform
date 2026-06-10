@@ -1,5 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
-import { Zap, CheckCircle, DollarSign, AlertTriangle, Activity, Clock } from 'lucide-react'
+import { Zap, CheckCircle, DollarSign, Clock } from 'lucide-react'
 import { StatCard } from '@/components/ui/StatCard'
 import { StatusBadge } from '@/components/ui/StatusBadge'
 import {
