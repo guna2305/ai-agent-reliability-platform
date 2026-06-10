@@ -5,10 +5,10 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from src.application.interfaces.repositories.evaluation_repository import (
-    EvaluationRunRepository,
     EvaluationResultRepository,
+    EvaluationRunRepository,
 )
-from src.domain.entities import EvaluationRun, EvaluationResult
+from src.domain.entities import EvaluationResult, EvaluationRun
 from src.domain.exceptions import DomainException
 from src.domain.value_objects import EvaluationType
 

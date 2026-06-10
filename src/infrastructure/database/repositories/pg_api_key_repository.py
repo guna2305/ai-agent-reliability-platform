@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -47,7 +47,7 @@ class PostgresApiKeyRepository(ApiKeyRepository):
     async def update_last_used(self, key_id: str) -> None:
         row = await self._session.get(ApiKeyModel, key_id)
         if row:
-            row.last_used_at = datetime.now(timezone.utc)
+            row.last_used_at = datetime.now(UTC)
             await self._session.flush()
 
 

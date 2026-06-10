@@ -4,10 +4,10 @@ from decimal import Decimal
 import pytest
 
 from src.application.use_cases.evaluations import (
-    ScoringInput,
     ScoringConfig,
-    score_item,
+    ScoringInput,
     aggregate_results,
+    score_item,
 )
 from src.domain.entities import EvaluationResult
 from src.domain.value_objects import EvaluationType

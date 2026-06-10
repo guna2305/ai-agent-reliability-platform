@@ -1,17 +1,16 @@
 """Organization management routes."""
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, Field
 
 from src.application.use_cases.organizations import (
-    CreateOrgDTO,
     CreateOrganizationUseCase,
+    CreateOrgDTO,
+    InsufficientPermissionError,
     InviteMemberDTO,
     InviteMemberUseCase,
     ListOrganizationsUseCase,
-    OrgNotFoundError,
-    InsufficientPermissionError,
 )
 from src.infrastructure.database.repositories import (
     PostgresOrganizationRepository,
@@ -19,7 +18,9 @@ from src.infrastructure.database.repositories import (
     PostgresUserRepository,
 )
 from src.presentation.api.auth_dependencies import (
-    CurrentUser, OrgAdminDep, SessionDep,
+    CurrentUser,
+    OrgAdminDep,
+    SessionDep,
 )
 
 router = APIRouter(prefix="/organizations", tags=["organizations"])

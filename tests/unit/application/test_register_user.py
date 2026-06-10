@@ -12,8 +12,6 @@ from src.application.use_cases.auth import (
     RegisterUserUseCase,
 )
 from src.domain.entities import Organization, OrgMember, User
-from src.domain.value_objects import AgentStatus
-
 
 # ── In-memory fakes ───────────────────────────────────────────────────────────
 
@@ -124,7 +122,7 @@ async def test_register_creates_org_with_owner_membership():
     member_repo = FakeMemberRepo()
     uc = RegisterUserUseCase(user_repo=user_repo, org_repo=org_repo, member_repo=member_repo)
 
-    result = await uc.execute(RegisterUserDTO(
+    await uc.execute(RegisterUserDTO(
         email="charlie@example.com",
         password="mypassword99",
         full_name="Charlie",

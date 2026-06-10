@@ -4,7 +4,7 @@ import pytest
 
 from src.domain.entities import Execution
 from src.domain.exceptions import InvalidRunTransitionError
-from src.domain.value_objects import ExecutionStatus, TriggerType
+from src.domain.value_objects import ExecutionStatus
 
 
 def test_create_execution_defaults_to_queued():

@@ -21,7 +21,9 @@ from src.infrastructure.database.repositories import (
     PostgresOrganizationRepository,
 )
 from src.presentation.api.auth_dependencies import (
-    CurrentUser, OrgMemberDep, SessionDep,
+    CurrentUser,
+    OrgMemberDep,
+    SessionDep,
 )
 
 router = APIRouter(prefix="/organizations/{org_slug}/evaluations", tags=["evaluations"])

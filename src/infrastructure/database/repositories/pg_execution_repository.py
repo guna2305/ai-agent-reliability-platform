@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from datetime import datetime
-from decimal import Decimal
 
 from sqlalchemy import func, select, text
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -12,7 +11,7 @@ from src.application.interfaces.repositories import (
     ToolCallRepository,
 )
 from src.domain.entities import Execution, ExecutionTrace, ToolCall
-from src.domain.value_objects import ExecutionStatus, TriggerType, TraceType, SpanStatus
+from src.domain.value_objects import ExecutionStatus, SpanStatus, TraceType, TriggerType
 from src.infrastructure.database.models.execution_model import (
     ExecutionModel,
     ExecutionTraceModel,

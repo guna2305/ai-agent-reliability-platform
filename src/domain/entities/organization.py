@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 
 def _slugify(name: str) -> str:
@@ -21,8 +21,8 @@ class Organization:
     description: str | None
     plan: str  # free / pro / enterprise
     metadata: dict = field(default_factory=dict)
-    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-    updated_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     @classmethod
     def create(
@@ -31,7 +31,7 @@ class Organization:
         description: str | None = None,
         plan: str = "free",
     ) -> Organization:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         return cls(
             id=str(uuid.uuid4()),
             name=name,
@@ -44,7 +44,7 @@ class Organization:
 
     def upgrade_plan(self, plan: str) -> None:
         self.plan = plan
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
 
 
 @dataclass
@@ -62,5 +62,5 @@ class OrgMember:
             org_id=org_id,
             user_id=user_id,
             role=role,
-            created_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
         )

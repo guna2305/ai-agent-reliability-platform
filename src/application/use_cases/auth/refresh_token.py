@@ -4,13 +4,13 @@ from dataclasses import dataclass
 
 from src.application.interfaces.repositories import UserRepository
 from src.domain.exceptions import DomainException
+from src.infrastructure.cache.redis_client import get_redis
 from src.infrastructure.security.jwt_service import (
-    decode_token,
-    create_access_token,
     TokenExpiredError,
     TokenInvalidError,
+    create_access_token,
+    decode_token,
 )
-from src.infrastructure.cache.redis_client import get_redis
 
 
 class InvalidRefreshTokenError(DomainException):

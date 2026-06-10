@@ -2,11 +2,10 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
-from src.domain.value_objects import AgentStatus
 from src.domain.exceptions import InvalidAgentStateError
-
+from src.domain.value_objects import AgentStatus
 
 _VALID_STATUS_TRANSITIONS: dict[AgentStatus, set[AgentStatus]] = {
     AgentStatus.ACTIVE: {AgentStatus.INACTIVE, AgentStatus.DEPRECATED},
@@ -34,7 +33,7 @@ class Agent:
         version: str = "1.0.0",
         tags: list[str] | None = None,
     ) -> Agent:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         return cls(
             id=str(uuid.uuid4()),
             name=name,
@@ -51,7 +50,7 @@ class Agent:
         if new_status not in allowed:
             raise InvalidAgentStateError(self.id, self.status.value, new_status.value)
         self.status = new_status
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
 
     def deactivate(self) -> None:
         self.transition_status(AgentStatus.INACTIVE)

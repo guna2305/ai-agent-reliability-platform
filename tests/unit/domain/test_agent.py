@@ -1,7 +1,7 @@
 import pytest
 
 from src.domain.entities import Agent
-from src.domain.exceptions import InvalidAgentStateError, DuplicateAgentError
+from src.domain.exceptions import InvalidAgentStateError
 from src.domain.value_objects import AgentStatus
 
 

@@ -1,7 +1,7 @@
 """Authentication routes: register, login, refresh, logout, me."""
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, HTTPException, Request, status
 from pydantic import BaseModel, EmailStr, Field
 
 from src.application.use_cases.auth import (
@@ -19,16 +19,14 @@ from src.application.use_cases.auth import (
     RegisterUserUseCase,
 )
 from src.infrastructure.cache.redis_client import rate_limit_check
-from src.infrastructure.config.settings import get_settings
 from src.infrastructure.database.repositories import (
-    PostgresOrgMemberRepository,
     PostgresOrganizationRepository,
+    PostgresOrgMemberRepository,
     PostgresUserRepository,
 )
 from src.presentation.api.auth_dependencies import (
     CurrentUser,
     SessionDep,
-    get_user_repo,
 )
 
 router = APIRouter(prefix="/auth", tags=["auth"])

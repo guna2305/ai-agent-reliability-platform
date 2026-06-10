@@ -1,12 +1,18 @@
 from __future__ import annotations
 
 import uuid
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from dataclasses import dataclass
+from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Any
 
-from src.domain.value_objects import EvaluationStatus, EvaluationType, FailureType, FailureSeverity, DetectionMethod
+from src.domain.value_objects import (
+    DetectionMethod,
+    EvaluationStatus,
+    EvaluationType,
+    FailureSeverity,
+    FailureType,
+)
 
 
 @dataclass
@@ -61,13 +67,13 @@ class EvaluationRun:
             started_at=None,
             completed_at=None,
             created_by=created_by,
-            created_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
         )
 
     def start(self, total_items: int) -> None:
         self.status = EvaluationStatus.RUNNING
         self.total_items = total_items
-        self.started_at = datetime.now(timezone.utc)
+        self.started_at = datetime.now(UTC)
 
     def record_item_completed(self) -> None:
         self.completed_items += 1
@@ -78,11 +84,11 @@ class EvaluationRun:
     def complete(self, aggregate_scores: dict[str, Any]) -> None:
         self.status = EvaluationStatus.COMPLETED
         self.aggregate_scores = aggregate_scores
-        self.completed_at = datetime.now(timezone.utc)
+        self.completed_at = datetime.now(UTC)
 
     def fail(self) -> None:
         self.status = EvaluationStatus.FAILED
-        self.completed_at = datetime.now(timezone.utc)
+        self.completed_at = datetime.now(UTC)
 
     @property
     def pass_rate(self) -> float:
@@ -147,7 +153,7 @@ class EvaluationResult:
             custom_scores=custom_scores or {},
             reasoning=reasoning,
             passed=passed,
-            created_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
         )
 
 
@@ -185,7 +191,7 @@ class HallucinationReport:
             flagged_segments=flagged_segments or [],
             reasoning=reasoning,
             is_confirmed=False,
-            created_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
         )
 
 
@@ -232,7 +238,7 @@ class FailureReport:
             cluster_id=None,
             is_resolved=False,
             resolution_notes=None,
-            created_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
         )
 
     def set_embedding(self, vector: list[float]) -> None:

@@ -3,14 +3,14 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from src.application.interfaces.repositories import (
-    UserRepository,
     OrganizationRepository,
     OrgMemberRepository,
+    UserRepository,
 )
-from src.domain.entities import User, Organization, OrgMember
+from src.domain.entities import Organization, OrgMember, User
 from src.domain.exceptions import DomainException
-from src.infrastructure.security.password_service import hash_password
 from src.infrastructure.security.jwt_service import create_access_token, create_refresh_token
+from src.infrastructure.security.password_service import hash_password
 
 
 class EmailAlreadyRegisteredError(DomainException):

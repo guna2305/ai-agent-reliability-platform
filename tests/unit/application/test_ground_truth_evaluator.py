@@ -2,9 +2,9 @@
 import pytest
 
 from src.infrastructure.ai.evaluators.ground_truth import (
+    evaluate_ground_truth,
     exact_match_score,
     token_f1_score,
-    evaluate_ground_truth,
 )
 
 

@@ -1,6 +1,6 @@
 from .create_agent import CreateAgentUseCase
 from .get_agent import GetAgentUseCase
-from .list_agents import ListAgentsUseCase, ListAgentsQuery, AgentListResult
+from .list_agents import AgentListResult, ListAgentsQuery, ListAgentsUseCase
 from .update_agent_status import UpdateAgentStatusUseCase
 
 __all__ = [

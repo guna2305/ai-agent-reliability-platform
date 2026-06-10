@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import uuid
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from dataclasses import dataclass
+from datetime import UTC, datetime
 from typing import Any
 
 
@@ -27,7 +27,7 @@ class Dataset:
         dataset_type: str = "golden",
         description: str | None = None,
     ) -> Dataset:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         return cls(
             id=str(uuid.uuid4()),
             org_id=org_id,
@@ -67,5 +67,5 @@ class DatasetItem:
             expected_output=expected_output,
             context=context or [],
             metadata=metadata or {},
-            created_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
         )

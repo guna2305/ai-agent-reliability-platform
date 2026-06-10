@@ -1,8 +1,7 @@
 """Analytics routes: execution stats, cost summary, model pricing."""
 from __future__ import annotations
 
-from fastapi import APIRouter, Query
-from pydantic import BaseModel
+from fastapi import APIRouter, HTTPException, Query
 
 from src.application.use_cases.executions import (
     AnalyticsQuery,
@@ -14,8 +13,7 @@ from src.infrastructure.database.repositories import (
     PostgresExecutionRepository,
     PostgresOrganizationRepository,
 )
-from src.presentation.api.auth_dependencies import CurrentUser, OrgMemberDep, SessionDep
-from fastapi import HTTPException
+from src.presentation.api.auth_dependencies import OrgMemberDep, SessionDep
 
 router = APIRouter(prefix="/organizations/{org_slug}/analytics", tags=["analytics"])
 

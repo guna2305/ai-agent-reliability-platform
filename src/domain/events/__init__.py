@@ -1,9 +1,9 @@
 from .domain_events import (
-    DomainEvent,
     AgentCreated,
-    AgentStatusChanged,
     AgentRunCompleted,
     AgentRunFailed,
+    AgentStatusChanged,
+    DomainEvent,
 )
 
 __all__ = [

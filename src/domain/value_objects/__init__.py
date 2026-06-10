@@ -1,16 +1,16 @@
 from .agent_status import AgentStatus
-from .run_status import RunStatus
-from .health_status import HealthStatus
-from .user_role import UserRole
-from .agent_type import AgentType, AgentFramework
-from .execution_enums import ExecutionStatus, TriggerType, TraceType, SpanStatus
+from .agent_type import AgentFramework, AgentType
 from .evaluation_enums import (
-    EvaluationType,
-    EvaluationStatus,
-    FailureType,
-    FailureSeverity,
     DetectionMethod,
+    EvaluationStatus,
+    EvaluationType,
+    FailureSeverity,
+    FailureType,
 )
+from .execution_enums import ExecutionStatus, SpanStatus, TraceType, TriggerType
+from .health_status import HealthStatus
+from .run_status import RunStatus
+from .user_role import UserRole
 
 __all__ = [
     "AgentStatus",

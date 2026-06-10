@@ -4,7 +4,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, HTTPException, Query, status
 from pydantic import BaseModel, Field
 
 from src.application.use_cases.agents_v2 import (
@@ -28,7 +28,10 @@ from src.infrastructure.database.repositories import (
     PostgresOrganizationRepository,
 )
 from src.presentation.api.auth_dependencies import (
-    CurrentUser, OrgAdminDep, OrgMemberDep, SessionDep,
+    CurrentUser,
+    OrgAdminDep,
+    OrgMemberDep,
+    SessionDep,
 )
 
 router = APIRouter(prefix="/organizations/{org_slug}/agents", tags=["agents"])

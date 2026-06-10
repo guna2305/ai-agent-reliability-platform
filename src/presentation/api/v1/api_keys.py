@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, Field
 
 from src.application.use_cases.api_keys import (
@@ -16,11 +16,14 @@ from src.application.use_cases.api_keys import (
 )
 from src.infrastructure.database.repositories import (
     PostgresApiKeyRepository,
-    PostgresOrgMemberRepository,
     PostgresOrganizationRepository,
+    PostgresOrgMemberRepository,
 )
 from src.presentation.api.auth_dependencies import (
-    CurrentUser, OrgAdminDep, OrgMemberDep, SessionDep,
+    CurrentUser,
+    OrgAdminDep,
+    OrgMemberDep,
+    SessionDep,
 )
 
 router = APIRouter(prefix="/organizations/{org_slug}/api-keys", tags=["api-keys"])

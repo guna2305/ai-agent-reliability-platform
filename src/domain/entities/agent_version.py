@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 
@@ -44,7 +44,7 @@ class AgentVersion:
             tools=tools or [],
             is_production=False,
             created_by=created_by,
-            created_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
         )
 
     def promote_to_production(self) -> None:

@@ -2,13 +2,10 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from decimal import Decimal
 from typing import Any
 
 from src.application.interfaces.repositories import (
     ExecutionRepository,
-    AgentV2Repository,
 )
 from src.domain.entities import Execution
 from src.domain.exceptions import DomainException

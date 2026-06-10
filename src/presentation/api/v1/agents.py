@@ -4,8 +4,8 @@ from src.application.dtos import CreateAgentDTO
 from src.application.use_cases.agents import (
     CreateAgentUseCase,
     GetAgentUseCase,
-    ListAgentsUseCase,
     ListAgentsQuery,
+    ListAgentsUseCase,
     UpdateAgentStatusUseCase,
 )
 from src.domain.exceptions import AgentNotFoundError, DuplicateAgentError, InvalidAgentStateError

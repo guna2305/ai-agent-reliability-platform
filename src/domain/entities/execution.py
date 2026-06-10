@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 import uuid
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from dataclasses import dataclass
+from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Any
 
-from src.domain.value_objects import ExecutionStatus, TriggerType
 from src.domain.exceptions import InvalidRunTransitionError
-
+from src.domain.value_objects import ExecutionStatus, TriggerType
 
 _VALID_TRANSITIONS: dict[ExecutionStatus, set[ExecutionStatus]] = {
     ExecutionStatus.QUEUED: {ExecutionStatus.RUNNING, ExecutionStatus.CANCELLED},
@@ -62,7 +61,7 @@ class Execution:
         tags: list[str] | None = None,
         metadata: dict[str, Any] | None = None,
     ) -> Execution:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         return cls(
             id=str(uuid.uuid4()),
             org_id=org_id,
@@ -130,7 +129,7 @@ class Execution:
         self.status = new_status
 
     def _finalize(self) -> None:
-        self.completed_at = datetime.now(timezone.utc)
+        self.completed_at = datetime.now(UTC)
         self.duration_ms = int((self.completed_at - self.started_at).total_seconds() * 1000)
 
     @property

@@ -3,9 +3,8 @@ from __future__ import annotations
 import hashlib
 import secrets
 import uuid
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from typing import Any
+from dataclasses import dataclass
+from datetime import UTC, datetime
 
 
 def _generate_key() -> tuple[str, str, str]:
@@ -49,15 +48,15 @@ class ApiKey:
             scopes=scopes or ["read", "write"],
             last_used_at=None,
             expires_at=expires_at,
-            created_at=datetime.now(timezone.utc),
+            created_at=datetime.now(UTC),
         )
         return api_key, raw_key
 
     def record_use(self) -> None:
-        self.last_used_at = datetime.now(timezone.utc)
+        self.last_used_at = datetime.now(UTC)
 
     @property
     def is_expired(self) -> bool:
         if self.expires_at is None:
             return False
-        return datetime.now(timezone.utc) > self.expires_at
+        return datetime.now(UTC) > self.expires_at

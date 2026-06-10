@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import uuid
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from dataclasses import dataclass
+from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Any
 
@@ -28,7 +28,7 @@ class Experiment:
         description: str | None = None,
         config: dict[str, Any] | None = None,
     ) -> Experiment:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         return cls(
             id=str(uuid.uuid4()),
             org_id=org_id,
@@ -43,11 +43,11 @@ class Experiment:
 
     def pause(self) -> None:
         self.status = "paused"
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
 
     def complete(self) -> None:
         self.status = "completed"
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
 
 
 @dataclass

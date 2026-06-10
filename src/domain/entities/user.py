@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 
 @dataclass
@@ -24,7 +24,7 @@ class User:
         full_name: str,
         is_superuser: bool = False,
     ) -> User:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         return cls(
             id=str(uuid.uuid4()),
             email=email.lower().strip(),
@@ -38,8 +38,8 @@ class User:
 
     def deactivate(self) -> None:
         self.is_active = False
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)
 
     def update_password(self, hashed_password: str) -> None:
         self.hashed_password = hashed_password
-        self.updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(UTC)

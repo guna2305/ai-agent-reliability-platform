@@ -1,10 +1,9 @@
 """Unit tests for execution lifecycle use cases."""
 from __future__ import annotations
 
-import pytest
-from datetime import datetime, timezone
 from decimal import Decimal
-from typing import Any
+
+import pytest
 
 from src.application.interfaces.repositories import ExecutionRepository
 from src.application.use_cases.executions import (
@@ -22,8 +21,7 @@ from src.application.use_cases.executions import (
     StartExecutionUseCase,
 )
 from src.domain.entities import Execution
-from src.domain.value_objects import ExecutionStatus, TriggerType
-
+from src.domain.value_objects import ExecutionStatus
 
 # ── In-memory fake ────────────────────────────────────────────────────────────
 

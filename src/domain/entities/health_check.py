@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from src.domain.value_objects import HealthStatus
 
@@ -28,7 +28,7 @@ class HealthCheck:
             id=str(uuid.uuid4()),
             agent_id=agent_id,
             status=status,
-            checked_at=datetime.now(timezone.utc),
+            checked_at=datetime.now(UTC),
             response_time_ms=response_time_ms,
             message=message,
         )

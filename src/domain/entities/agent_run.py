@@ -2,12 +2,11 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
-from src.domain.value_objects import RunStatus
 from src.domain.exceptions import InvalidRunTransitionError
-
+from src.domain.value_objects import RunStatus
 
 _VALID_RUN_TRANSITIONS: dict[RunStatus, set[RunStatus]] = {
     RunStatus.PENDING: {RunStatus.RUNNING, RunStatus.FAILED},
@@ -41,7 +40,7 @@ class AgentRun:
             id=str(uuid.uuid4()),
             agent_id=agent_id,
             status=RunStatus.PENDING,
-            started_at=datetime.now(timezone.utc),
+            started_at=datetime.now(UTC),
             completed_at=None,
             duration_ms=None,
             input_tokens=None,
@@ -77,7 +76,7 @@ class AgentRun:
         input_tokens: int | None = None,
         output_tokens: int | None = None,
     ) -> None:
-        self.completed_at = datetime.now(timezone.utc)
+        self.completed_at = datetime.now(UTC)
         self.duration_ms = int(
             (self.completed_at - self.started_at).total_seconds() * 1000
         )

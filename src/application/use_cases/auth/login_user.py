@@ -5,10 +5,10 @@ from dataclasses import dataclass
 from src.application.interfaces.repositories import UserRepository
 from src.application.use_cases.auth.register_user import AuthTokensDTO
 from src.domain.exceptions import DomainException
-from src.infrastructure.security.password_service import verify_password
-from src.infrastructure.security.jwt_service import create_access_token, create_refresh_token
 from src.infrastructure.cache.redis_client import get_redis
 from src.infrastructure.config.settings import get_settings
+from src.infrastructure.security.jwt_service import create_access_token, create_refresh_token
+from src.infrastructure.security.password_service import verify_password
 
 
 class InvalidCredentialsError(DomainException):

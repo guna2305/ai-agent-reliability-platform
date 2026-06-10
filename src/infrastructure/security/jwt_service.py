@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone, timedelta
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 import jwt
@@ -37,7 +37,7 @@ def create_access_token(user_id: str, email: str, is_superuser: bool = False) ->
     """Returns (encoded_token, jti)."""
     settings = _settings()
     jti = str(uuid.uuid4())
-    exp = datetime.now(timezone.utc) + timedelta(minutes=settings.jwt_access_token_expire_minutes)
+    exp = datetime.now(UTC) + timedelta(minutes=settings.jwt_access_token_expire_minutes)
     payload: dict[str, Any] = {
         "sub": user_id,
         "email": email,
@@ -45,7 +45,7 @@ def create_access_token(user_id: str, email: str, is_superuser: bool = False) ->
         "jti": jti,
         "type": "access",
         "exp": exp,
-        "iat": datetime.now(timezone.utc),
+        "iat": datetime.now(UTC),
     }
     token = jwt.encode(payload, settings.secret_key, algorithm=settings.jwt_algorithm)
     return token, jti
@@ -55,13 +55,13 @@ def create_refresh_token(user_id: str) -> tuple[str, str]:
     """Returns (encoded_token, jti)."""
     settings = _settings()
     jti = str(uuid.uuid4())
-    exp = datetime.now(timezone.utc) + timedelta(days=settings.jwt_refresh_token_expire_days)
+    exp = datetime.now(UTC) + timedelta(days=settings.jwt_refresh_token_expire_days)
     payload: dict[str, Any] = {
         "sub": user_id,
         "jti": jti,
         "type": "refresh",
         "exp": exp,
-        "iat": datetime.now(timezone.utc),
+        "iat": datetime.now(UTC),
     }
     token = jwt.encode(payload, settings.secret_key, algorithm=settings.jwt_algorithm)
     return token, jti
@@ -86,7 +86,7 @@ def decode_token(token: str) -> TokenPayload:
         is_superuser=data.get("is_superuser", False),
         jti=data["jti"],
         token_type=data.get("type", "access"),
-        exp=datetime.fromtimestamp(data["exp"], tz=timezone.utc),
+        exp=datetime.fromtimestamp(data["exp"], tz=UTC),
     )
 
 

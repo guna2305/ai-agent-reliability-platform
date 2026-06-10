@@ -1,11 +1,10 @@
 """Structured JSON logging setup for the platform."""
 from __future__ import annotations
 
+import json
 import logging
 import sys
 from typing import Any
-
-import json
 
 
 class JSONFormatter(logging.Formatter):

@@ -2,17 +2,15 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from decimal import Decimal
 from typing import Any
 
 from src.application.interfaces.repositories import (
-    ExecutionRepository,
     ExecutionTraceRepository,
     ToolCallRepository,
 )
 from src.domain.entities import ExecutionTrace, ToolCall
 from src.domain.exceptions import DomainException
-from src.domain.value_objects import TraceType, SpanStatus
+from src.domain.value_objects import TraceType
 from src.infrastructure.ai.cost_calculator import calculate_cost
 
 

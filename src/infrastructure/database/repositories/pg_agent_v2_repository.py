@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -24,7 +24,7 @@ class PostgresAgentV2Repository(AgentV2Repository):
         self._session = session
 
     async def save(self, agent_data: dict) -> dict:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         model = AgentOrgModel(
             id=agent_data["id"],
             org_id=agent_data["org_id"],
@@ -88,7 +88,7 @@ class PostgresAgentV2Repository(AgentV2Repository):
         for key, value in updates.items():
             if hasattr(row, key):
                 setattr(row, key, value)
-        row.updated_at = datetime.now(timezone.utc)
+        row.updated_at = datetime.now(UTC)
         await self._session.flush()
         return _model_to_dict(row)
 

@@ -3,7 +3,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 
 from src.domain.entities import AgentVersion
-from src.domain.entities.agent import Agent  # legacy simple agent
+
 # For org-scoped agents we import from the extended model path
 # The AgentOrg entity reuses the existing Agent dataclass with extra fields
 # handled in the DTO layer. Repos deal with domain entities only.

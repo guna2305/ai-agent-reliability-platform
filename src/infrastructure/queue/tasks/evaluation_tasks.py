@@ -38,16 +38,19 @@ def _extract_expected(expected: dict[str, Any] | None) -> str | None:
 
 
 async def _run_evaluation_pipeline(eval_run_id: str) -> dict[str, Any]:
-    from src.infrastructure.database.connection import get_session_factory
-    from src.infrastructure.database.repositories import (
-        PostgresEvaluationRunRepository,
-        PostgresEvaluationResultRepository,
-        PostgresDatasetItemRepository,
-    )
     from src.application.use_cases.evaluations import (
-        ScoringInput, ScoringConfig, score_item, aggregate_results,
+        ScoringConfig,
+        ScoringInput,
+        aggregate_results,
+        score_item,
     )
     from src.infrastructure.ai.providers import call_llm
+    from src.infrastructure.database.connection import get_session_factory
+    from src.infrastructure.database.repositories import (
+        PostgresDatasetItemRepository,
+        PostgresEvaluationResultRepository,
+        PostgresEvaluationRunRepository,
+    )
 
     factory = get_session_factory()
     async with factory() as session:

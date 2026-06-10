@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import uuid
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from src.application.interfaces.repositories import AgentV2Repository, AgentVersionRepository
@@ -56,7 +56,7 @@ class CreateAgentV2UseCase:
         self._repo = agent_repo
 
     async def execute(self, dto: CreateAgentV2DTO) -> dict:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         data = {
             "id": str(uuid.uuid4()),
             "org_id": dto.org_id,

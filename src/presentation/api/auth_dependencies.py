@@ -6,6 +6,7 @@ from typing import Annotated
 
 from fastapi import Depends, HTTPException, Request, Security, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.application.interfaces.repositories import (
     ApiKeyRepository,
@@ -13,8 +14,7 @@ from src.application.interfaces.repositories import (
     UserRepository,
 )
 from src.domain.entities import OrgMember, User
-from src.infrastructure.cache.redis_client import get_redis, is_token_blacklisted
-from src.infrastructure.config.settings import get_settings
+from src.infrastructure.cache.redis_client import is_token_blacklisted
 from src.infrastructure.database.connection import get_db_session
 from src.infrastructure.database.repositories import (
     PostgresApiKeyRepository,
@@ -26,8 +26,6 @@ from src.infrastructure.security.jwt_service import (
     TokenInvalidError,
     decode_token,
 )
-from sqlalchemy.ext.asyncio import AsyncSession
-
 
 # ── Session dependency ────────────────────────────────────────────────────────
 

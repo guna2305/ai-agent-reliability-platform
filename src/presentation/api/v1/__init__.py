@@ -1,17 +1,17 @@
 from fastapi import APIRouter
 
 from .agents import router as agents_router
-from .runs import router as runs_router
-from .health_checks import router as health_checks_router
-from .system import router as system_router
-from .auth import router as auth_router
-from .organizations import router as organizations_router
 from .agents_v2 import router as agents_v2_router
-from .api_keys import router as api_keys_router
-from .executions import router as executions_router
 from .analytics import router as analytics_router
+from .api_keys import router as api_keys_router
+from .auth import router as auth_router
 from .datasets import router as datasets_router
 from .evaluations import router as evaluations_router
+from .executions import router as executions_router
+from .health_checks import router as health_checks_router
+from .organizations import router as organizations_router
+from .runs import router as runs_router
+from .system import router as system_router
 
 v1_router = APIRouter(prefix="/api/v1")
 

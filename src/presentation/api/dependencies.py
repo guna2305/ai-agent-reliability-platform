@@ -14,13 +14,13 @@ from src.application.use_cases.agents import (
     ListAgentsUseCase,
     UpdateAgentStatusUseCase,
 )
+from src.application.use_cases.health_checks import RecordHealthCheckUseCase
 from src.application.use_cases.runs import (
     CompleteRunUseCase,
     FailRunUseCase,
     ListRunsUseCase,
     StartRunUseCase,
 )
-from src.application.use_cases.health_checks import RecordHealthCheckUseCase
 from src.infrastructure.database.connection import get_db_session
 from src.infrastructure.database.repositories import (
     PostgresAgentRepository,

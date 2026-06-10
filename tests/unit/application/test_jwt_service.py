@@ -2,7 +2,6 @@
 import pytest
 
 from src.infrastructure.security.jwt_service import (
-    TokenExpiredError,
     TokenInvalidError,
     create_access_token,
     create_refresh_token,

@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from src.application.interfaces.repositories import ExecutionRepository
@@ -20,7 +20,7 @@ class GetExecutionStatsUseCase:
         self._repo = exec_repo
 
     async def execute(self, query: AnalyticsQuery) -> dict[str, Any]:
-        end_dt = datetime.now(timezone.utc)
+        end_dt = datetime.now(UTC)
         start_dt = end_dt - timedelta(days=query.days)
         return await self._repo.get_stats(
             org_id=query.org_id,
@@ -35,7 +35,7 @@ class GetCostSummaryUseCase:
         self._repo = exec_repo
 
     async def execute(self, query: AnalyticsQuery) -> dict[str, Any]:
-        end_dt = datetime.now(timezone.utc)
+        end_dt = datetime.now(UTC)
         start_dt = end_dt - timedelta(days=query.days)
 
         by_model = await self._repo.get_cost_by_model(

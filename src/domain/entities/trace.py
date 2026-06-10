@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 import uuid
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from dataclasses import dataclass
+from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Any
 
-from src.domain.value_objects import TraceType, SpanStatus
+from src.domain.value_objects import SpanStatus, TraceType
 
 
 @dataclass
@@ -44,7 +44,7 @@ class ExecutionTrace:
         model: str | None = None,
         metadata: dict[str, Any] | None = None,
     ) -> ExecutionTrace:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         return cls(
             id=str(uuid.uuid4()),
             execution_id=execution_id,
@@ -76,7 +76,7 @@ class ExecutionTrace:
         cost_usd: Decimal | None = None,
     ) -> None:
         self.output = output
-        self.ended_at = datetime.now(timezone.utc)
+        self.ended_at = datetime.now(UTC)
         self.duration_ms = int((self.ended_at - self.started_at).total_seconds() * 1000)
         self.input_tokens = input_tokens
         self.output_tokens = output_tokens
@@ -85,7 +85,7 @@ class ExecutionTrace:
 
     def fail(self, error: str) -> None:
         self.error = error
-        self.ended_at = datetime.now(timezone.utc)
+        self.ended_at = datetime.now(UTC)
         self.duration_ms = int((self.ended_at - self.started_at).total_seconds() * 1000)
         self.status = SpanStatus.ERROR
 
@@ -114,7 +114,7 @@ class ToolCall:
         input: dict[str, Any],
         trace_id: str | None = None,
     ) -> ToolCall:
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
         return cls(
             id=str(uuid.uuid4()),
             execution_id=execution_id,
@@ -133,11 +133,11 @@ class ToolCall:
     def complete(self, output: dict[str, Any]) -> None:
         self.output = output
         self.status = "success"
-        ended = datetime.now(timezone.utc)
+        ended = datetime.now(UTC)
         self.duration_ms = int((ended - self.started_at).total_seconds() * 1000)
 
     def fail(self, error_message: str) -> None:
         self.error_message = error_message
         self.status = "error"
-        ended = datetime.now(timezone.utc)
+        ended = datetime.now(UTC)
         self.duration_ms = int((ended - self.started_at).total_seconds() * 1000)

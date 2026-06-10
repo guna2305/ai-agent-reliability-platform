@@ -1,8 +1,6 @@
 """Unit tests for the cost calculator."""
 from decimal import Decimal
 
-import pytest
-
 from src.infrastructure.ai.cost_calculator import calculate_cost, get_supported_models
 
 

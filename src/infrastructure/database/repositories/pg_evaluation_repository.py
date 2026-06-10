@@ -1,23 +1,21 @@
 from __future__ import annotations
 
-from decimal import Decimal
-
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.application.interfaces.repositories.evaluation_repository import (
-    DatasetRepository,
     DatasetItemRepository,
-    EvaluationRunRepository,
+    DatasetRepository,
     EvaluationResultRepository,
+    EvaluationRunRepository,
 )
-from src.domain.entities import Dataset, DatasetItem, EvaluationRun, EvaluationResult
-from src.domain.value_objects import EvaluationStatus, EvaluationType, DetectionMethod
+from src.domain.entities import Dataset, DatasetItem, EvaluationResult, EvaluationRun
+from src.domain.value_objects import EvaluationStatus, EvaluationType
 from src.infrastructure.database.models.evaluation_model import (
-    DatasetModel,
     DatasetItemModel,
-    EvaluationRunModel,
+    DatasetModel,
     EvaluationResultModel,
+    EvaluationRunModel,
 )
 
 

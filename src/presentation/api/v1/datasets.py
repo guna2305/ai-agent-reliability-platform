@@ -24,7 +24,10 @@ from src.infrastructure.database.repositories import (
     PostgresOrganizationRepository,
 )
 from src.presentation.api.auth_dependencies import (
-    CurrentUser, OrgAdminDep, OrgMemberDep, SessionDep,
+    CurrentUser,
+    OrgAdminDep,
+    OrgMemberDep,
+    SessionDep,
 )
 
 router = APIRouter(prefix="/organizations/{org_slug}/datasets", tags=["datasets"])

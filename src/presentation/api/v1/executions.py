@@ -2,10 +2,9 @@
 from __future__ import annotations
 
 from datetime import datetime
-from decimal import Decimal
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, HTTPException, Query, status
 from pydantic import BaseModel, Field
 
 from src.application.use_cases.executions import (
@@ -35,7 +34,7 @@ from src.application.use_cases.executions import (
     TraceNotFoundError,
 )
 from src.domain.exceptions import DomainException
-from src.domain.value_objects import ExecutionStatus, TriggerType, TraceType
+from src.domain.value_objects import ExecutionStatus, TraceType, TriggerType
 from src.infrastructure.database.repositories import (
     PostgresExecutionRepository,
     PostgresExecutionTraceRepository,
@@ -43,7 +42,9 @@ from src.infrastructure.database.repositories import (
     PostgresToolCallRepository,
 )
 from src.presentation.api.auth_dependencies import (
-    CurrentUser, OrgMemberDep, SessionDep,
+    CurrentUser,
+    OrgMemberDep,
+    SessionDep,
 )
 
 router = APIRouter(prefix="/organizations/{org_slug}/executions", tags=["executions"])

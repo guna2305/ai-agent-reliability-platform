@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -33,7 +33,7 @@ async def write_audit_log(
         new_value=new_value,
         ip_address=ip_address,
         user_agent=user_agent,
-        created_at=datetime.now(timezone.utc),
+        created_at=datetime.now(UTC),
     )
     session.add(entry)
     # Caller must commit the session

@@ -1,10 +1,8 @@
 """Unit tests for ExecutionTrace and ToolCall domain entities."""
 from decimal import Decimal
 
-import pytest
-
 from src.domain.entities import ExecutionTrace, ToolCall
-from src.domain.value_objects import TraceType, SpanStatus
+from src.domain.value_objects import SpanStatus, TraceType
 
 
 def test_create_trace_span_defaults():

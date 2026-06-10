@@ -5,8 +5,8 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from src.application.interfaces.repositories.evaluation_repository import (
-    DatasetRepository,
     DatasetItemRepository,
+    DatasetRepository,
 )
 from src.domain.entities import Dataset, DatasetItem
 from src.domain.exceptions import DomainException

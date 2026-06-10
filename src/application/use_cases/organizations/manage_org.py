@@ -107,7 +107,7 @@ class InviteMemberUseCase:
 
         existing = await self._member_repo.get(dto.org_id, user.id)
         if existing:
-            raise DomainException(f"User is already a member")
+            raise DomainException("User is already a member")
 
         member = OrgMember.create(org_id=dto.org_id, user_id=user.id, role=dto.role)
         return await self._member_repo.save(member)
