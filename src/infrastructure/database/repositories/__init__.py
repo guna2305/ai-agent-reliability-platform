@@ -5,6 +5,11 @@ from .pg_user_repository import PostgresUserRepository
 from .pg_organization_repository import PostgresOrganizationRepository, PostgresOrgMemberRepository
 from .pg_agent_v2_repository import PostgresAgentV2Repository, PostgresAgentVersionRepository
 from .pg_api_key_repository import PostgresApiKeyRepository
+from .pg_execution_repository import (
+    PostgresExecutionRepository,
+    PostgresExecutionTraceRepository,
+    PostgresToolCallRepository,
+)
 
 __all__ = [
     "PostgresAgentRepository",
@@ -16,4 +21,7 @@ __all__ = [
     "PostgresAgentV2Repository",
     "PostgresAgentVersionRepository",
     "PostgresApiKeyRepository",
+    "PostgresExecutionRepository",
+    "PostgresExecutionTraceRepository",
+    "PostgresToolCallRepository",
 ]

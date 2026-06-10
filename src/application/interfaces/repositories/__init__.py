@@ -5,6 +5,7 @@ from .user_repository import UserRepository
 from .organization_repository import OrganizationRepository, OrgMemberRepository
 from .agent_v2_repository import AgentV2Repository, AgentVersionRepository
 from .api_key_repository import ApiKeyRepository
+from .execution_repository import ExecutionRepository, ExecutionTraceRepository, ToolCallRepository
 
 __all__ = [
     "AgentRepository",
@@ -16,4 +17,7 @@ __all__ = [
     "AgentV2Repository",
     "AgentVersionRepository",
     "ApiKeyRepository",
+    "ExecutionRepository",
+    "ExecutionTraceRepository",
+    "ToolCallRepository",
 ]
