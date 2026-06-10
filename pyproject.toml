@@ -21,7 +21,7 @@ dependencies = [
     "pydantic-settings>=2.3.0",
     "python-dotenv>=1.0.1",
     # Auth
-    "passlib[bcrypt]>=1.7.4",
+    "bcrypt>=4.0.0",
     "PyJWT>=2.8.0",
     # Cache & queue
     "redis>=5.0.4",
