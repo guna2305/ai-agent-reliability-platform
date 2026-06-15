@@ -1,0 +1,32 @@
+{
+  "items": [
+    {
+      "input": { "question": "How do I reset my password?" },
+      "expected_output": { "answer": "Click 'Forgot password' on the login page; a reset link is emailed to you and is valid for 30 minutes." },
+      "context": [
+        "Password resets are initiated from the login page via the 'Forgot password' link.",
+        "Reset links expire after 30 minutes for security."
+      ]
+    },
+    {
+      "input": { "question": "What payment methods do you accept?" },
+      "expected_output": { "answer": "We accept Visa, Mastercard, American Express, and PayPal." },
+      "context": ["Accepted payment methods: Visa, Mastercard, American Express, PayPal."]
+    },
+    {
+      "input": { "question": "Can I get a refund after 30 days?" },
+      "expected_output": { "answer": "Refunds are only available within 30 days of purchase; after that the sale is final." },
+      "context": ["Refund policy: full refund within 30 days of purchase. No refunds after 30 days."]
+    },
+    {
+      "input": { "question": "How do I export my data?" },
+      "expected_output": { "answer": "Go to Settings → Data → Export; you'll receive a downloadable archive by email." },
+      "context": ["Data export is available under Settings → Data → Export and is delivered via email."]
+    },
+    {
+      "input": { "question": "Is there a free tier?" },
+      "expected_output": { "answer": "Yes — the free tier includes up to 1,000 executions per month at no cost." },
+      "context": ["Free tier: 1,000 executions/month. Paid plans add higher limits and support."]
+    }
+  ]
+}
