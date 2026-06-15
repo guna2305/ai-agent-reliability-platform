@@ -83,8 +83,8 @@ presentation/    ← FastAPI routers, Pydantic schemas, DI wiring
 | 2 | Auth (JWT + RBAC), org management, agent registry v2, API keys | ✅ Done |
 | 3 | Execution engine, span tracing, cost calculator, analytics, Minikube K8s | ✅ Done |
 | 4 | Evaluation framework (LLM-judge, ground-truth, RAG metrics, Celery pipeline) | ✅ Done |
-| 5 | Hallucination detection | 🔨 Next |
-| 6 | Failure clustering with embeddings | Planned |
+| 5 | Hallucination detection (reference / retrieval / LLM-judge, signal fusion) | ✅ Done |
+| 6 | Failure clustering with embeddings | 🔨 Next |
 | 7 | React dashboard with live charts | Planned |
 | 8 | Full K8s deployment with Helm | Planned |
 | 9 | Demo dataset + documentation | Planned |
@@ -212,6 +212,12 @@ POST   /organizations/{slug}/evaluations/runs                Launch eval (dispat
 GET    /organizations/{slug}/evaluations/runs                List eval runs
 GET    /organizations/{slug}/evaluations/runs/{id}           Run status + aggregate scores
 GET    /organizations/{slug}/evaluations/runs/{id}/results   Per-item scores
+
+# Hallucination detection (reference / retrieval-consistency / LLM-judge, fused)
+POST   /organizations/{slug}/executions/{id}/hallucination-check  Detect + store report
+GET    /organizations/{slug}/executions/{id}/hallucinations       Reports for an execution
+GET    /organizations/{slug}/hallucinations?min_score=0.7         Org-wide flagged reports
+POST   /organizations/{slug}/hallucinations/{id}/confirm          Mark human-confirmed (admin+)
 ```
 
 ---
