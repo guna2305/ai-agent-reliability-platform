@@ -1,0 +1,96 @@
+# Default values for ai-agent-platform.
+# Tuned for local Minikube. Override with values-dev.yaml / values-prod.yaml.
+
+global:
+  namespace: agent-platform
+  imagePullPolicy: IfNotPresent   # Minikube uses locally-built images
+
+# ── Application config (rendered into a ConfigMap) ──────────────────────────
+config:
+  appEnv: production
+  logLevel: INFO
+  defaultProvider: ollama
+  defaultModel: llama3.2
+  evalJudgeModel: llama3.2
+  ollamaEmbedModel: nomic-embed-text
+  otelEnabled: "false"
+
+# ── Secrets (rendered into a Secret) ────────────────────────────────────────
+# For real deployments, prefer `helm install --set-string secrets.secretKey=...`
+# or an external secret manager. These defaults are dev-only.
+secrets:
+  secretKey: "dev-secret-key-change-me-in-production-min-32-chars"
+  postgresUser: postgres
+  postgresPassword: postgres
+  postgresDb: agent_reliability
+
+# ── FastAPI backend ─────────────────────────────────────────────────────────
+api:
+  image: agent-platform-api:latest
+  replicas: 2
+  port: 8000
+  resources:
+    requests: { cpu: 200m, memory: 256Mi }
+    limits:   { cpu: 500m, memory: 512Mi }
+
+# ── Celery workers ──────────────────────────────────────────────────────────
+workers:
+  evaluations:
+    replicas: 1
+    concurrency: 4
+    queues: "evaluations,critical"
+    resources:
+      requests: { cpu: 250m, memory: 384Mi }
+      limits:   { cpu: 1000m, memory: 768Mi }
+  analytics:
+    replicas: 1
+    concurrency: 2
+    queues: "analytics"
+    resources:
+      requests: { cpu: 200m, memory: 256Mi }
+      limits:   { cpu: 500m, memory: 512Mi }
+
+# ── React frontend ──────────────────────────────────────────────────────────
+frontend:
+  image: agent-platform-frontend:latest
+  replicas: 1
+  port: 80
+
+# ── PostgreSQL (pgvector) ───────────────────────────────────────────────────
+postgres:
+  image: pgvector/pgvector:pg16
+  port: 5432
+  storage: 5Gi
+  resources:
+    requests: { cpu: 250m, memory: 256Mi }
+    limits:   { cpu: 1000m, memory: 1Gi }
+
+# ── Redis ───────────────────────────────────────────────────────────────────
+redis:
+  image: redis:7-alpine
+  port: 6379
+  storage: 1Gi
+
+# ── Ollama (local LLM, free) ────────────────────────────────────────────────
+ollama:
+  enabled: true
+  image: ollama/ollama:latest
+  port: 11434
+  storage: 20Gi
+  # Pull these models on first start via the init job
+  models:
+    - llama3.2
+    - nomic-embed-text
+  resources:
+    requests: { cpu: 500m, memory: 2Gi }
+    limits:   { cpu: "2", memory: 6Gi }
+
+# ── Ingress ─────────────────────────────────────────────────────────────────
+ingress:
+  enabled: true
+  className: nginx
+  host: agent-platform.local
+
+# ── Database migration job (Helm pre-install/pre-upgrade hook) ──────────────
+migrations:
+  enabled: true

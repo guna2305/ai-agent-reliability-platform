@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: platform-config
+  namespace: {{ include "platform.namespace" . }}
+  labels:
+    {{- include "platform.labels" . | nindent 4 }}
+data:
+  APP_ENV: {{ .Values.config.appEnv | quote }}
+  APP_PORT: {{ .Values.api.port | quote }}
+  LOG_LEVEL: {{ .Values.config.logLevel | quote }}
+  REDIS_URL: "redis://redis-service:{{ .Values.redis.port }}/0"
+  CELERY_BROKER_URL: "redis://redis-service:{{ .Values.redis.port }}/1"
+  CELERY_RESULT_BACKEND: "redis://redis-service:{{ .Values.redis.port }}/2"
+  OLLAMA_BASE_URL: "http://ollama-service:{{ .Values.ollama.port }}"
+  DEFAULT_PROVIDER: {{ .Values.config.defaultProvider | quote }}
+  DEFAULT_MODEL: {{ .Values.config.defaultModel | quote }}
+  EVAL_JUDGE_MODEL: {{ .Values.config.evalJudgeModel | quote }}
+  OLLAMA_EMBED_MODEL: {{ .Values.config.ollamaEmbedModel | quote }}
+  OTEL_ENABLED: {{ .Values.config.otelEnabled | quote }}
+  OTEL_SERVICE_NAME: "agent-platform"

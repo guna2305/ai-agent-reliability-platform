@@ -1,0 +1,14 @@
+apiVersion: v2
+name: ai-agent-platform
+description: AI Agent Evaluation & Reliability Platform — FastAPI + Celery + Postgres + Redis + Ollama + React
+type: application
+version: 0.1.0
+appVersion: "0.3.0"
+keywords:
+  - ai-agents
+  - evaluation
+  - observability
+  - llm
+maintainers:
+  - name: guna2305
+home: https://github.com/guna2305/ai-agent-reliability-platform

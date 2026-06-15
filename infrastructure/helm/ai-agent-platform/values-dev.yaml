@@ -1,0 +1,24 @@
+# Development overrides — minimal footprint for local Minikube.
+config:
+  appEnv: development
+  logLevel: DEBUG
+
+api:
+  replicas: 1
+
+workers:
+  evaluations:
+    replicas: 1
+    concurrency: 2
+  analytics:
+    replicas: 1
+    concurrency: 1
+
+postgres:
+  storage: 2Gi
+
+ollama:
+  storage: 10Gi
+  resources:
+    requests: { cpu: 500m, memory: 2Gi }
+    limits:   { cpu: "2", memory: 4Gi }
