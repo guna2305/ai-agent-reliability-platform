@@ -9,6 +9,7 @@ from .evaluation_repository import (
     EvaluationRunRepository,
 )
 from .execution_repository import ExecutionRepository, ExecutionTraceRepository, ToolCallRepository
+from .hallucination_repository import HallucinationReportRepository
 from .health_check_repository import HealthCheckRepository
 from .organization_repository import OrganizationRepository, OrgMemberRepository
 from .user_repository import UserRepository
@@ -30,4 +31,5 @@ __all__ = [
     "DatasetItemRepository",
     "EvaluationRunRepository",
     "EvaluationResultRepository",
+    "HallucinationReportRepository",
 ]

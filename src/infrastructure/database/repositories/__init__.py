@@ -13,6 +13,7 @@ from .pg_execution_repository import (
     PostgresExecutionTraceRepository,
     PostgresToolCallRepository,
 )
+from .pg_hallucination_repository import PostgresHallucinationReportRepository
 from .pg_health_check_repository import PostgresHealthCheckRepository
 from .pg_organization_repository import PostgresOrganizationRepository, PostgresOrgMemberRepository
 from .pg_user_repository import PostgresUserRepository
@@ -34,4 +35,5 @@ __all__ = [
     "PostgresDatasetItemRepository",
     "PostgresEvaluationRunRepository",
     "PostgresEvaluationResultRepository",
+    "PostgresHallucinationReportRepository",
 ]
