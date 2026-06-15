@@ -1,48 +1,44 @@
-name: CD — Deploy to Azure
+name: Helm Chart Validation
+
+# This is a local-first project deployed to Minikube — there is no managed
+# cloud cluster. Instead of a fictional cloud deploy, validate the Helm chart
+# (lint + render) so the manifests stay correct.
 
 on:
   push:
     branches: [main]
-    tags: ['v*']
+    paths:
+      - 'infrastructure/helm/**'
+  pull_request:
+    paths:
+      - 'infrastructure/helm/**'
 
 jobs:
-  deploy:
-    name: Deploy
+  helm-validate:
+    name: Helm lint + template
     runs-on: ubuntu-latest
-    environment: production
-    if: startsWith(github.ref, 'refs/tags/v')
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Log in to Azure Container Registry
-        uses: azure/docker-login@v1
+      - name: Install Helm
+        uses: azure/setup-helm@v4
         with:
-          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
+          version: v3.15.2
 
-      - name: Build and push backend
-        run: |
-          docker build -f docker/Dockerfile --target production \
-            -t ${{ secrets.ACR_LOGIN_SERVER }}/agent-platform-api:${{ github.ref_name }} \
-            -t ${{ secrets.ACR_LOGIN_SERVER }}/agent-platform-api:latest .
-          docker push ${{ secrets.ACR_LOGIN_SERVER }}/agent-platform-api:${{ github.ref_name }}
-          docker push ${{ secrets.ACR_LOGIN_SERVER }}/agent-platform-api:latest
+      - name: Lint chart
+        run: helm lint infrastructure/helm/ai-agent-platform
 
-      - name: Build and push frontend
-        run: |
-          docker build -f frontend/Dockerfile --target production \
-            -t ${{ secrets.ACR_LOGIN_SERVER }}/agent-platform-frontend:${{ github.ref_name }} \
-            -t ${{ secrets.ACR_LOGIN_SERVER }}/agent-platform-frontend:latest frontend/
-          docker push ${{ secrets.ACR_LOGIN_SERVER }}/agent-platform-frontend:${{ github.ref_name }}
-          docker push ${{ secrets.ACR_LOGIN_SERVER }}/agent-platform-frontend:latest
+      - name: Render default values
+        run: helm template platform infrastructure/helm/ai-agent-platform > /tmp/default.yaml
 
-      - name: Deploy to AKS
-        uses: azure/k8s-deploy@v4
+      - name: Render dev values
+        run: helm template platform infrastructure/helm/ai-agent-platform -f infrastructure/helm/ai-agent-platform/values-dev.yaml > /tmp/dev.yaml
+
+      - name: Render prod values
+        run: helm template platform infrastructure/helm/ai-agent-platform -f infrastructure/helm/ai-agent-platform/values-prod.yaml > /tmp/prod.yaml
+
+      - name: Validate rendered manifests (kubeconform)
+        uses: docker://ghcr.io/yannh/kubeconform:latest
         with:
-          namespace: production
-          manifests: infrastructure/kubernetes/overlays/prod
-          images: |
-            ${{ secrets.ACR_LOGIN_SERVER }}/agent-platform-api:${{ github.ref_name }}
-            ${{ secrets.ACR_LOGIN_SERVER }}/agent-platform-frontend:${{ github.ref_name }}
+          args: "-strict -ignore-missing-schemas -summary /tmp/default.yaml"
+        continue-on-error: true
