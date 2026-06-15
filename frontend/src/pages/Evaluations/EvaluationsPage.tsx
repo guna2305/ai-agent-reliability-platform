@@ -1,61 +1,72 @@
-import { FlaskConical, Play } from 'lucide-react'
+import { FlaskConical } from 'lucide-react'
 import { StatusBadge } from '@/components/ui/StatusBadge'
-import type { EvaluationStatus } from '@/types/api'
-
-const MOCK_RUNS = [
-  { id: 'eval-001', name: 'GPT-4o Baseline',    agent: 'Customer Support', eval_type: 'llm_judge',    status: 'completed' as EvaluationStatus, total_items: 100, pass_rate: 0.87, avg_score: 0.82 },
-  { id: 'eval-002', name: 'RAG Quality v2',     agent: 'Research Agent',   eval_type: 'rag',          status: 'running'   as EvaluationStatus, total_items: 50,  pass_rate: null, avg_score: null },
-  { id: 'eval-003', name: 'Ground Truth Check', agent: 'SQL Agent',        eval_type: 'ground_truth', status: 'completed' as EvaluationStatus, total_items: 200, pass_rate: 0.91, avg_score: 0.89 },
-  { id: 'eval-004', name: 'Hallucination Scan', agent: 'Coding Agent',     eval_type: 'llm_judge',    status: 'pending'   as EvaluationStatus, total_items: 75,  pass_rate: null, avg_score: null },
-]
+import { QueryBoundary } from '@/components/ui/QueryBoundary'
+import { useEvaluationRuns } from '@/hooks/useApi'
+import type { EvaluationRun } from '@/types/api'
 
 export function EvaluationsPage() {
+  const { data, isLoading, isError } = useEvaluationRuns()
+  const runs = data?.items ?? []
+
   return (
     <div className="p-8 space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Evaluations</h1>
-          <p className="text-gray-400 mt-1">LLM-judge, RAGAS, ground-truth evaluation runs</p>
+          <p className="text-gray-400 mt-1">LLM-judge, ground-truth, and RAG evaluation runs</p>
         </div>
-        <button className="btn-primary flex items-center gap-2">
-          <Play className="w-4 h-4" />
-          New Evaluation Run
-        </button>
       </div>
 
-      <div className="space-y-3">
-        {MOCK_RUNS.map(run => (
-          <div key={run.id} className="card hover:border-gray-700 transition-colors cursor-pointer">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center">
-                  <FlaskConical className="w-5 h-5 text-purple-400" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-semibold text-white">{run.name}</h3>
-                  <p className="text-xs text-gray-500 mt-0.5">
-                    {run.agent} · {run.eval_type.replace('_', ' ')} · {run.total_items} items
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-6">
-                {run.pass_rate !== null && (
-                  <div className="text-right">
-                    <p className="text-xs text-gray-500">Pass Rate</p>
-                    <p className="text-sm font-bold text-white">{(run.pass_rate * 100).toFixed(1)}%</p>
-                  </div>
-                )}
-                {run.avg_score !== null && (
-                  <div className="text-right">
-                    <p className="text-xs text-gray-500">Avg Score</p>
-                    <p className="text-sm font-bold text-white">{run.avg_score.toFixed(2)}</p>
-                  </div>
-                )}
-                <StatusBadge status={run.status} />
-              </div>
-            </div>
+      <QueryBoundary
+        isLoading={isLoading}
+        isError={isError}
+        isEmpty={runs.length === 0}
+        emptyMessage="No evaluation runs yet."
+      >
+        <div className="space-y-3">
+          {runs.map((run) => (
+            <EvalRunCard key={run.id} run={run} />
+          ))}
+        </div>
+      </QueryBoundary>
+    </div>
+  )
+}
+
+function EvalRunCard({ run }: { run: EvaluationRun }) {
+  const passRate = run.aggregate_scores?.pass_rate as number | undefined
+  const progress = run.total_items > 0 ? Math.round((run.completed_items / run.total_items) * 100) : 0
+
+  return (
+    <div className="card hover:border-gray-700 transition-colors cursor-pointer">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center">
+            <FlaskConical className="w-5 h-5 text-purple-400" />
           </div>
-        ))}
+          <div>
+            <h3 className="text-sm font-semibold text-white">{run.name}</h3>
+            <p className="text-xs text-gray-500 mt-0.5">
+              {run.eval_type.replace('_', ' ')} · {run.completed_items}/{run.total_items} items
+              {run.failed_items > 0 && <span className="text-red-400"> · {run.failed_items} failed</span>}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-6">
+          {passRate != null && (
+            <div className="text-right">
+              <p className="text-xs text-gray-500">Pass Rate</p>
+              <p className="text-sm font-bold text-white">{(passRate * 100).toFixed(1)}%</p>
+            </div>
+          )}
+          {run.status === 'running' && (
+            <div className="text-right">
+              <p className="text-xs text-gray-500">Progress</p>
+              <p className="text-sm font-bold text-blue-400">{progress}%</p>
+            </div>
+          )}
+          <StatusBadge status={run.status} />
+        </div>
       </div>
     </div>
   )
