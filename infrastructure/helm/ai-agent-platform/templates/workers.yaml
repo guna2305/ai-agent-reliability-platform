@@ -1,0 +1,64 @@
+{{- $celery := "celery -A src.infrastructure.queue.celery_app.celery_app worker" -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-evaluations
+  namespace: {{ include "platform.namespace" . }}
+  labels:
+    {{- include "platform.labels" . | nindent 4 }}
+    app: worker-evaluations
+spec:
+  replicas: {{ .Values.workers.evaluations.replicas }}
+  selector:
+    matchLabels:
+      app: worker-evaluations
+  template:
+    metadata:
+      labels:
+        app: worker-evaluations
+    spec:
+      containers:
+        - name: worker
+          image: {{ .Values.api.image }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          command:
+            - /bin/sh
+            - -c
+            - "{{ $celery }} --queues={{ .Values.workers.evaluations.queues }} --concurrency={{ .Values.workers.evaluations.concurrency }} --loglevel=info"
+          envFrom:
+            - configMapRef: { name: platform-config }
+            - secretRef: { name: platform-secrets }
+          resources:
+            {{- toYaml .Values.workers.evaluations.resources | nindent 12 }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-analytics
+  namespace: {{ include "platform.namespace" . }}
+  labels:
+    {{- include "platform.labels" . | nindent 4 }}
+    app: worker-analytics
+spec:
+  replicas: {{ .Values.workers.analytics.replicas }}
+  selector:
+    matchLabels:
+      app: worker-analytics
+  template:
+    metadata:
+      labels:
+        app: worker-analytics
+    spec:
+      containers:
+        - name: worker
+          image: {{ .Values.api.image }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          command:
+            - /bin/sh
+            - -c
+            - "{{ $celery }} --queues={{ .Values.workers.analytics.queues }} --concurrency={{ .Values.workers.analytics.concurrency }} --loglevel=info"
+          envFrom:
+            - configMapRef: { name: platform-config }
+            - secretRef: { name: platform-secrets }
+          resources:
+            {{- toYaml .Values.workers.analytics.resources | nindent 12 }}

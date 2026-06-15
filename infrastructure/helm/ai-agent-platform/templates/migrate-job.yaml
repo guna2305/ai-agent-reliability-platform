@@ -1,0 +1,44 @@
+{{- if .Values.migrations.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-migrate
+  namespace: {{ include "platform.namespace" . }}
+  labels:
+    {{- include "platform.labels" . | nindent 4 }}
+  annotations:
+    # post-install/upgrade so Postgres has been created first; the command
+    # waits for the DB to accept connections before running Alembic.
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "0"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 5
+  activeDeadlineSeconds: 600
+  template:
+    metadata:
+      labels:
+        app: db-migrate
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migrate
+          image: {{ .Values.api.image }}
+          imagePullPolicy: {{ .Values.global.imagePullPolicy }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Waiting for postgres-service:{{ .Values.postgres.port }} ..."
+              for i in $(seq 1 60); do
+                if python -c "import socket,sys; s=socket.socket(); s.settimeout(2); sys.exit(0 if s.connect_ex(('postgres-service', {{ .Values.postgres.port }}))==0 else 1)"; then
+                  echo "Postgres is up — running migrations"
+                  exec alembic upgrade head
+                fi
+                echo "  not ready yet ($i/60), retrying in 3s"; sleep 3
+              done
+              echo "Postgres did not become ready in time" >&2; exit 1
+          envFrom:
+            - configMapRef: { name: platform-config }
+            - secretRef: { name: platform-secrets }
+{{- end }}
