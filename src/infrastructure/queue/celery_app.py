@@ -13,6 +13,7 @@ def create_celery_app() -> Celery:
         backend=settings.celery_result_backend,
         include=[
             "src.infrastructure.queue.tasks.evaluation_tasks",
+            "src.infrastructure.queue.tasks.hallucination_tasks",
             "src.infrastructure.queue.tasks.analytics_tasks",
             "src.infrastructure.queue.tasks.embedding_tasks",
         ],
