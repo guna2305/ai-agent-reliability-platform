@@ -15,6 +15,36 @@ export interface PaginatedResponse<T> {
   offset: number
 }
 
+// ─── Auth & Organizations ────────────────────────────────────────────────────
+
+export type UserRole = 'owner' | 'admin' | 'member' | 'viewer'
+
+export interface AuthTokens {
+  access_token: string
+  refresh_token: string
+  token_type: string
+  user_id: string
+  email: string
+  full_name: string
+}
+
+export interface CurrentUser {
+  id: string
+  email: string
+  full_name: string
+  is_active: boolean
+  is_superuser: boolean
+}
+
+export interface Organization {
+  id: string
+  name: string
+  slug: string
+  description: string | null
+  plan: string
+  created_at: string
+}
+
 // ─── Agents ─────────────────────────────────────────────────────────────────
 
 export interface Agent {

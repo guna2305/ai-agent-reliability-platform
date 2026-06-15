@@ -1,9 +1,12 @@
-import { Outlet, NavLink } from 'react-router-dom'
+import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard, Bot, Zap, FlaskConical,
-  GitBranch, BarChart3, AlertTriangle, Settings,
+  GitBranch, BarChart3, AlertTriangle, LogOut,
 } from 'lucide-react'
 import { clsx } from 'clsx'
+import { authApi } from '@/api/auth'
+import { useAuthStore } from '@/stores/authStore'
+import { useOrgStore } from '@/stores/orgStore'
 
 const NAV_ITEMS = [
   { to: '/dashboard',   label: 'Dashboard',   icon: LayoutDashboard },
@@ -15,6 +18,23 @@ const NAV_ITEMS = [
 ]
 
 export function AppLayout() {
+  const navigate = useNavigate()
+  const user = useAuthStore((s) => s.user)
+  const clear = useAuthStore((s) => s.clear)
+  const currentOrg = useOrgStore((s) => s.currentOrg)
+  const organizations = useOrgStore((s) => s.organizations)
+  const setCurrentOrg = useOrgStore((s) => s.setCurrentOrg)
+
+  const logout = async () => {
+    try {
+      await authApi.logout(localStorage.getItem('refresh_token'))
+    } catch {
+      /* ignore — clear locally regardless */
+    }
+    clear()
+    navigate('/login')
+  }
+
   return (
     <div className="flex h-screen bg-gray-950">
       {/* Sidebar */}
@@ -29,6 +49,25 @@ export function AppLayout() {
             <p className="text-xs text-gray-400">Reliability Suite</p>
           </div>
         </div>
+
+        {/* Org switcher */}
+        {organizations.length > 0 && (
+          <div className="px-4 py-3 border-b border-gray-800">
+            <label className="text-xs text-gray-500 font-medium">Organization</label>
+            <select
+              value={currentOrg?.slug ?? ''}
+              onChange={(e) => {
+                const org = organizations.find((o) => o.slug === e.target.value)
+                if (org) setCurrentOrg(org)
+              }}
+              className="mt-1 w-full bg-gray-950 border border-gray-700 rounded-lg px-2 py-1.5 text-sm text-white focus:outline-none focus:border-brand-500"
+            >
+              {organizations.map((o) => (
+                <option key={o.id} value={o.slug}>{o.name}</option>
+              ))}
+            </select>
+          </div>
+        )}
 
         {/* Navigation */}
         <nav className="flex-1 px-3 py-4 space-y-1">
@@ -51,15 +90,21 @@ export function AppLayout() {
           ))}
         </nav>
 
-        {/* Footer */}
+        {/* Footer — user + logout */}
         <div className="px-3 py-4 border-t border-gray-800">
-          <NavLink
-            to="/settings"
-            className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-100 hover:bg-gray-800 transition-colors"
+          {user && (
+            <div className="px-3 pb-2">
+              <p className="text-sm text-gray-200 font-medium truncate">{user.full_name}</p>
+              <p className="text-xs text-gray-500 truncate">{user.email}</p>
+            </div>
+          )}
+          <button
+            onClick={logout}
+            className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-100 hover:bg-gray-800 transition-colors w-full"
           >
-            <Settings className="w-4 h-4" />
-            Settings
-          </NavLink>
+            <LogOut className="w-4 h-4" />
+            Sign out
+          </button>
         </div>
       </aside>
 
