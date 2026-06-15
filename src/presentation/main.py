@@ -57,15 +57,19 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    try:
-        from prometheus_fastapi_instrumentator import Instrumentator
-        Instrumentator(
-            should_group_status_codes=True,
-            should_ignore_untemplated=True,
-            excluded_handlers=["/metrics", "/health"],
-        ).instrument(app).expose(app, endpoint="/metrics")
-    except ImportError:
-        pass
+    # Prometheus metrics are opt-in (METRICS_ENABLED=true). The instrumentator's
+    # route-name resolver is sensitive to nested include_router layouts, so it
+    # stays off by default to keep the API working out of the box.
+    if settings.metrics_enabled:
+        try:
+            from prometheus_fastapi_instrumentator import Instrumentator
+            Instrumentator(
+                should_group_status_codes=True,
+                should_ignore_untemplated=True,
+                excluded_handlers=["/metrics", "/health"],
+            ).instrument(app).expose(app, endpoint="/metrics")
+        except Exception as exc:  # pragma: no cover - defensive
+            logger.warning("Prometheus instrumentation disabled: %s", exc)
 
     @app.exception_handler(DomainException)
     async def domain_exception_handler(request: Request, exc: DomainException) -> JSONResponse:

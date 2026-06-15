@@ -14,7 +14,9 @@ class AgentOrgModel(Base):
     __tablename__ = "agents_v2"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
-    org_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
+    org_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("organizations.id", ondelete="CASCADE"), nullable=False, index=True
+    )
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     slug: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)

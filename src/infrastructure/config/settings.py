@@ -72,6 +72,7 @@ class Settings(BaseSettings):
     otel_enabled: bool = False
     otel_exporter_otlp_endpoint: str = "http://localhost:4317"
     otel_service_name: str = "agent-reliability-platform"
+    metrics_enabled: bool = False  # Prometheus /metrics (opt-in)
 
     # ── CORS ─────────────────────────────────────────────────────────────────
     cors_origins: list[str] = ["http://localhost:5173", "http://localhost:3000"]
