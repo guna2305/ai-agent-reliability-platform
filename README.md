@@ -85,8 +85,8 @@ presentation/    ← FastAPI routers, Pydantic schemas, DI wiring
 | 4 | Evaluation framework (LLM-judge, ground-truth, RAG metrics, Celery pipeline) | ✅ Done |
 | 5 | Hallucination detection (reference / retrieval / LLM-judge, signal fusion) | ✅ Done |
 | 6 | Failure analytics — rule-based classifier + k-means embedding clustering | ✅ Done |
-| 7 | React dashboard with live charts | 🔨 Next |
-| 8 | Full K8s deployment with Helm | Planned |
+| 7 | React dashboard wired to live API (auth, org switcher, TanStack Query) | ✅ Done |
+| 8 | Full K8s deployment with Helm | 🔨 Next |
 | 9 | Demo dataset + documentation | Planned |
 
 ---
