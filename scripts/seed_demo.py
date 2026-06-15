@@ -223,6 +223,7 @@ async def _seed(reset: bool) -> None:
                                    name="LLM-Judge Baseline", eval_type=EvaluationType.LLM_JUDGE,
                                    dataset_id=dataset.id)
         run.start(total_items=len(items))
+        await eval_run_repo.save(run)   # persist run BEFORE results (FK target)
         results = []
         passed_count = 0
         for item in items:
@@ -242,7 +243,7 @@ async def _seed(reset: bool) -> None:
             "total": len(items), "passed": passed_count,
         })
         run.status = EvaluationStatus.COMPLETED
-        await eval_run_repo.save(run)
+        await eval_run_repo.update(run)   # run already saved — update it
         await session.commit()
 
         # ── Hallucination reports (on a few failed/odd execs) ────────────────
