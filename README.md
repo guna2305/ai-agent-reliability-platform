@@ -87,7 +87,11 @@ presentation/    ← FastAPI routers, Pydantic schemas, DI wiring
 | 6 | Failure analytics — rule-based classifier + k-means embedding clustering | ✅ Done |
 | 7 | React dashboard wired to live API (auth, org switcher, TanStack Query) | ✅ Done |
 | 8 | Helm chart — full K8s stack (Postgres/Redis/Ollama/API/workers/frontend) | ✅ Done |
-| 9 | Demo dataset + documentation | 🔨 Next |
+| 9 | Demo seed data, usage guide, golden dataset | ✅ Done |
+
+All nine planned phases are complete. See the **[Usage Guide](docs/usage.md)** for an
+end-to-end walkthrough and `python -m scripts.seed_demo` to populate a demo org.
+Ongoing ideas live in the issues; this is an actively-tinkered personal project.
 
 ---
 
@@ -110,15 +114,20 @@ ollama pull llama3.2
 ollama pull nomic-embed-text   # for embeddings
 
 # 3. Start the full stack
-docker compose up -d db redis
+docker compose up -d db redis ollama
 docker compose --profile migration up migrate
-docker compose up api frontend
+docker compose up -d api worker-evaluations worker-analytics frontend
 
-# 4. Open the UI
+# 4. (Optional) Seed demo data so the dashboard isn't empty
+python -m scripts.seed_demo      # login: demo@example.com / demodemo123
+
+# 5. Open the UI
 # Frontend:  http://localhost:5173
 # API docs:  http://localhost:8000/docs
 # Flower:    http://localhost:5555  (Celery task monitor)
 ```
+
+Full walkthrough (curl examples for every endpoint): **[docs/usage.md](docs/usage.md)**.
 
 ### With GPU (faster inference)
 Uncomment the `deploy.resources` block in `docker-compose.yml` for the Ollama service if you have an NVIDIA GPU and `nvidia-container-toolkit` installed.
