@@ -194,6 +194,14 @@ class HallucinationReport:
             created_at=datetime.now(UTC),
         )
 
+    def confirm(self) -> None:
+        self.is_confirmed = True
+
+    @property
+    def is_hallucinated(self) -> bool:
+        """True when the score crosses the default flagging threshold (0.7)."""
+        return self.hallucination_score >= Decimal("0.7")
+
 
 @dataclass
 class FailureReport:
