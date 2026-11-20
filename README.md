@@ -4,6 +4,42 @@ A platform I'm building to evaluate, monitor, debug, and improve AI agents runni
 
 ---
 
+## Visitor guide: how the project works
+
+This project helps developers inspect AI agent behavior: what ran, how long it took, which steps failed, and how outputs scored against evaluation criteria.
+
+**Explore:** [Local setup](#running-it-locally) · [API walkthrough](docs/usage.md) · [Architecture](docs/architecture.md) · [Example evaluation data](docs/demo-dataset/support_qa.json)
+
+**Viewing the application:** Follow the local setup below to open the React dashboard and interactive API documentation. No public hosted demo URL is provided here. The localhost links work after you start the stack on your own computer.
+
+### The workflow
+
+1. **Register an agent** in an organization and manage its versions.
+2. **Record executions** with inputs, outputs, status, latency, token usage, and cost metadata.
+3. **Inspect traces and tool calls** to understand the steps behind an execution.
+4. **Evaluate outputs** using datasets and the available ground-truth, LLM-judge, or RAG evaluation paths.
+5. **Investigate reliability** through hallucination reports, failure classification, clustering, and semantic failure search.
+6. **Review the dashboard** to explore execution trends, evaluations, costs, and failures.
+
+The React frontend communicates with FastAPI. PostgreSQL stores application records and vector data; Redis and Celery support background work; Ollama supplies local model inference for the configured AI workflows. Your application must submit execution and trace records through the API: starting this platform does not automatically instrument an external agent.
+
+### Suggested first tour
+
+After seeding the demo data, sign in with the local demo account and select **Demo Organization**. Visit **Dashboard → Agents → Executions → Trace Viewer → Evaluations → Analytics → Failures**. Then follow the [usage guide](docs/usage.md) to record your own execution and submit evaluation data.
+
+The seed script creates **four agents and forty executions**, together with example traces, evaluation results, hallucination reports, and failures. These are synthetic demonstration records, including randomized scores and outcomes; they are not a benchmark or evidence of real agent quality.
+
+### Working notes
+
+- Run migrations before seeding or using the API.
+- Download models into the **Docker Ollama service** used by the backend, as shown below.
+- Local Ollama usage does not require a paid model API key, but it still uses your machine's memory, storage, and compute.
+- Evaluation and detection scores are signals for investigation, not guarantees of correctness.
+- The demo login is for local exploration. Configure your own credentials and deployment settings before sharing a hosted instance.
+- These documentation steps were checked against repository source and configuration; a fresh end-to-end stack run has not been performed for this update.
+
+---
+
 ## Why I'm Building This
 
 When you deploy AI agents, you quickly run into questions that are hard to answer:
@@ -37,7 +73,7 @@ I couldn't find a single tool that answered all of these well (especially for fr
 ## Tech Stack
 
 ### Backend
-- **Python 3.12** + **FastAPI** — async API framework
+- **Python 3.11+** + **FastAPI** — async API framework
 - **PostgreSQL 16** + **pgvector** — main database + vector similarity search for failure clustering
 - **SQLAlchemy 2.0** async — ORM with typed mapped columns
 - **Alembic** — database migrations
@@ -98,34 +134,46 @@ Ongoing ideas live in the issues; this is an actively-tinkered personal project.
 ## Running It Locally
 
 ### Prerequisites
-- Docker + Docker Compose
-- [Ollama](https://ollama.ai) installed locally
-- Python 3.12+
+
+- Git
+- Docker with Docker Compose available and running
+- Internet access for container images and initial model downloads
+
+The Docker route provides Python, Node.js, and Ollama inside containers.
 
 ### Quick Start
+
 ```bash
-# 1. Clone and configure
-git clone https://github.com/guna2305/ai-agent-reliability-platform
+git clone https://github.com/guna2305/ai-agent-reliability-platform.git
 cd ai-agent-reliability-platform
 cp .env.example .env
-
-# 2. Pull the default LLM (free, ~2GB)
-ollama pull llama3.2
-ollama pull nomic-embed-text   # for embeddings
-
-# 3. Start the full stack
-docker compose up -d db redis ollama
-docker compose --profile migration up migrate
-docker compose up -d api worker-evaluations worker-analytics frontend
-
-# 4. (Optional) Seed demo data so the dashboard isn't empty
-python -m scripts.seed_demo      # login: demo@example.com / demodemo123
-
-# 5. Open the UI
-# Frontend:  http://localhost:5173
-# API docs:  http://localhost:8000/docs
-# Flower:    http://localhost:5555  (Celery task monitor)
 ```
+
+On Windows PowerShell, use `Copy-Item .env.example .env` for the copy step. Review the environment settings, then run:
+
+```bash
+# Start supporting services
+docker compose up -d db redis ollama
+
+# Pull models into the Ollama container used by the backend
+docker compose exec ollama ollama pull llama3.2
+docker compose exec ollama ollama pull nomic-embed-text
+
+# Apply the database schema; continue only if this exits successfully
+docker compose --profile migration run --rm migrate
+
+# Build and start the application
+docker compose up -d --build api worker-evaluations worker-analytics frontend
+
+# Populate the local demo using the API container's dependencies and DB settings
+docker compose exec api python -m scripts.seed_demo
+```
+
+Open **http://localhost:5173** and sign in with `demo@example.com` / `demodemo123`. Interactive API documentation is at **http://localhost:8000/docs** with the default port configuration.
+
+Check service status with `docker compose ps`. For startup errors, inspect `docker compose logs api frontend worker-evaluations`. If Ollama is still starting, wait for it to be ready and retry the model pull. A host Ollama process using port 11434 can conflict with the container port.
+
+Stop the local stack with `docker compose down`; named database and model volumes are retained.
 
 Full walkthrough (curl examples for every endpoint): **[docs/usage.md](docs/usage.md)**.
 
@@ -280,3 +328,4 @@ pytest tests/integration/ -v  # requires running DB + Redis
 │   └── architecture.md  # System design, ER diagram, decisions
 └── docker-compose.yml
 ```
+
